@@ -45,6 +45,6 @@ class Zef::ContentStorage::LocalCache does ContentStorage {
     # todo: handle %fields
     method search(:$max-results = 5, *@identities, *%fields) {
         #more efficient to do identities as we parse the json - (1 loop instead of 2)
-        my @distros = self!gather-metas($.dir.IO, :@identities);
+        my @distros = self!gather-metas(self.IO, :@identities);
     }
 }
