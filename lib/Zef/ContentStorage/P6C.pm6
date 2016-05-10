@@ -1,12 +1,17 @@
 use Zef;
+use Zef::Utils::FileSystem;
 use Zef::Distribution;
 use Zef::Distribution::DependencySpecification;
 
+# So now that this needs both the extractor *and* fetcher
+# it may be time to rethink how some of this is designed
 class Zef::ContentStorage::P6C does ContentStorage {
     has $.mirrors;
     has $.auto-update;
-    has $.fetcher is rw;
-    has $.cache is rw;
+    has $.fetcher   is rw;
+    has $.extractor is rw;
+    has $.cache     is rw;
+    has $.temp      is rw;
 
     has @!dists;
 
@@ -35,17 +40,25 @@ class Zef::ContentStorage::P6C does ContentStorage {
         $dir;
     }
 
-    method !package-list-file  { $ = self.IO.child('packages.json') }
+    method !package-list-file  {
+        my $dir = $!cache.IO.child('p6c');
+        die "failed to create directory {$dir}"
+            unless ($dir.IO.e || mkdir($dir));
+        $ = $dir.child('p6c.json');
+    }
     method !slurp-package-list { @ = |from-json(self!package-list-file.slurp) }
 
     method update {
         die "Failed to update p6c" unless $!mirrors.first: -> $uri {
-            my $save-as = $!cache.IO.child($uri.IO.basename);
-            my $path    = try { $!fetcher.fetch($uri, $save-as) } || next;
-            # this is kinda odd, but if $path is a file, then its fetching via http from p6c.org
-            # and if its a directory its pulling from my ecosystems repo (this hides the difference for now)
-            $path = $path.IO.child('p6c.json') if $path.IO.d;
-            try { copy($path, self!package-list-file) } || next;
+            my $stage-at = $!temp.IO.child($uri.IO.basename);
+            die "failed to create directory: {$!temp.absolute}"
+                unless ($!temp.IO.e || mkdir($!temp));
+
+            my $save-to    = $!fetcher.fetch($uri, $stage-at);
+            my $stored-at  = $!extractor.extract($save-to, $save-to ~ '.extracted');
+            my $projects   = list-paths( $stored-at, :f, :!d, :r ).first(* ~~ /'.json'$/);
+
+            try copy($projects, self!package-list-file);
         }
         @!dists = |self!slurp-package-list.map: { $ = Zef::Distribution.new(|%($_)) }
     }

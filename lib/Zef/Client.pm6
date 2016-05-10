@@ -9,6 +9,7 @@ use Zef::Test;
 
 class Zef::Client {
     has $.cache;
+    has $.temp;
     has $.indexer;
     has $.fetcher;
     has $.storage;
@@ -30,6 +31,7 @@ class Zef::Client {
 
     method new(
         :cache(:$zcache),
+        :temp(:$ztemp),
         :fetcher(:$zfetcher),
         :storage(:$zstorage),
         :extractor(:$zextractor),
@@ -40,6 +42,9 @@ class Zef::Client {
         my $cache := ?$zcache ?? $zcache !! ?$config<StoreDir>
             ?? $config<StoreDir>
             !! die "Zef::Client requires a cache parameter";
+        my $temp := ?$ztemp ?? $ztemp !! ?$config<TempDir>
+            ?? $config<TempDir>
+            !! die "Zef::Client requires a temp parameter";
         my $fetcher := ?$zfetcher ?? $zfetcher !! ?$config<Fetch>
             ?? Zef::Fetch.new(:backends(|$config<Fetch>))
             !! die "Zef::Client requires a fetcher parameter";
@@ -54,11 +59,14 @@ class Zef::Client {
             !! die "Zef::Client requires a storage parameter";
 
         mkdir $cache unless $cache.IO.e;
+        mkdir $temp  unless $temp.IO.e;
 
-        $storage.cache   //= $cache;
-        $storage.fetcher //= $fetcher;
+        $storage.cache     //= $cache;
+        $storage.temp      //= $temp;
+        $storage.fetcher   //= $fetcher;
+        $storage.extractor //= $extractor;
 
-        self.bless(:$cache, :$fetcher, :$storage, :$extractor, :$tester, :$config, |%_);
+        self.bless(:$cache, :$temp, :$fetcher, :$storage, :$extractor, :$tester, :$config, |%_);
     }
 
     method find-candidates(Bool :$upgrade, *@identities ($, *@)) {

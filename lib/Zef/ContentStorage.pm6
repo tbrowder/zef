@@ -1,8 +1,10 @@
 use Zef;
 
 class Zef::ContentStorage does Pluggable {
-    has $.fetcher is rw;
-    has $.cache   is rw;
+    has $.fetcher   is rw;
+    has $.extractor is rw;
+    has $.cache     is rw;
+    has $.temp      is rw;
 
     # Like search, but meant to return a single result for each specific identity string
     # whereas search is meant to search more fields and give many results to choose from
@@ -21,8 +23,10 @@ class Zef::ContentStorage does Pluggable {
     # todo: Find a better way to allow plugins access to other plugins
     method !plugins(*@names) {
         cache gather for self.plugins(|@names) {
-            .fetcher //= $!fetcher if .^can('fetcher');
-            .cache   //= $!cache   if .^can('cache');
+            .fetcher   //= $!fetcher   if .^can('fetcher');
+            .extractor //= $!extractor if .^can('extractor');
+            .cache     //= $!cache     if .^can('cache');
+            .temp      //= $!temp      if .^can('temp');
             take $_;
         }
     }
