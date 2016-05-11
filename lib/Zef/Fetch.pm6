@@ -6,9 +6,9 @@ class Zef::Fetch does Pluggable {
 
     method fetch($uri is copy, $save-as, Supplier :$logger) {
         $logger.emit({
-            level => DEBUG,
-            stage => FETCH,
-            phase => START,
+            level   => DEBUG,
+            stage   => FETCH,
+            phase   => START,
             payload => self,
             message => "Fetch URI: {$uri}"
         }) if ?$logger;
