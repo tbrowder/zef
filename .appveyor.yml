@@ -42,4 +42,8 @@ test_script:
     - zef update cached # test single storage update; should be 0 after previous nuke
     - zef --/confirm nuke site home # no more `zef` command
 
+    # Test with `git` plugin disabled
+    - cd %APPVEYOR_BUILD_FOLDER%
+    - perl6 -Ilib bin/zef --debug --/git install Base64
+
 shallow_clone: true

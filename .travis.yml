@@ -54,3 +54,7 @@ script:
     - zef --/confirm nuke TempDir StoreDir RootDir
     - zef update cached # test single storage update; should be 0 after previous nuke
     - zef --/confirm nuke site home # no more `zef` command
+
+    # Test with `git` plugin disabled
+    - cd $TRAVIS_BUILD_DIR
+    - perl6 -Ilib bin/zef --debug --/git install Base64
