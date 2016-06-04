@@ -32,7 +32,7 @@ class Zef::Distribution::Local is Zef::Distribution {
         # "12" is the minimum size required for a valid meta that
         # rakudos internal json parser can understand (and is longer than
         # what the symlink issue noted above usually involves)
-        my $meta-variants = <META6.json META.info META6.info>.map: { $ = $dir.child($_) }
+        my $meta-variants = <META6.json META.info META6.info>.map: { $dir.child($_) }
         my $chosen-meta   = $meta-variants.grep(*.IO.e).first: -> $file {
             so ($file.e && ($*DISTRO.is-win ?? ((try $file.s) > 12) !! $file.f));
         } || IO::Path;

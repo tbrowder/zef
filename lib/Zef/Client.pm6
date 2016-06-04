@@ -377,10 +377,10 @@ class Zef::Client {
                     ~   "Disallowed licenses: {$!config<License>.<blacklist>.join(',') || 'n/a'}";
                 } }
                 when .<blacklist>.?chars && any(|.<blacklist>) ~~ any('*', $dist.license // '') {
-                    $ = "License blacklist configuration exists and matches {$dist.license // 'n/a'} for {$dist.name}";
+                    "License blacklist configuration exists and matches {$dist.license // 'n/a'} for {$dist.name}";
                 }
                 when .<whitelist>.?chars && any(|.<whitelist>) ~~ none('*', $dist.license // '') {
-                    $ = "License whitelist configuration exists and does not match {$dist.license // 'n/a'} for {$dist.name}";
+                    "License whitelist configuration exists and does not match {$dist.license // 'n/a'} for {$dist.name}";
                 }
             }
 
@@ -485,7 +485,7 @@ class Zef::Client {
                             payload => $candi,
                             message => "Install [OK] for {$candi.dist.?identity // $candi.as}",
                         }) if ?$install;
-                        $ = ?$install;
+                        ?$install;
                     }
                     #});
                 }
@@ -583,7 +583,7 @@ class Zef::Client {
     }
 
     method is-installed($spec, :@at) {
-        $ = ?self.list-installed(|@at).first(*.dist.contains-spec($spec))
+        ?self.list-installed(|@at).first(*.dist.contains-spec($spec))
     }
 
     method sort-candidates(@candis, *%_) {
@@ -608,7 +608,7 @@ class Zef::Client {
             $visit($candi, 'olaf') if ($candi.dist.metainfo<marked> // 0) == 0;
         }
 
-        $ = @tree.map(*.dist)>>.metainfo<marked>:delete;
+        @tree.map(*.dist)>>.metainfo<marked>:delete;
         return @tree;
     }
 
@@ -724,7 +724,7 @@ sub legacy-hook($candi, :$logger) {
         use Zef::Shell;
         CATCH { default { $result = False; } }
         my @includes = $dist.metainfo<includes>.grep(*.defined).map: { "-I{$_}" }
-        my @exec = |($*EXECUTABLE, '-Ilib', '-I.', |@includes, '-e', "$cmd");
+        my @exec = $*EXECUTABLE, '-Ilib', '-I.', @includes, '-e', "$cmd";
 
         $logger.emit({
             level   => DEBUG,
@@ -761,5 +761,5 @@ sub legacy-hook($candi, :$logger) {
 
     $builder-path.IO.unlink if $builder-path.ends-with('.zef') && "{$builder-path}".IO.e;
 
-    $ = ?$result;
+    ?$result;
 }

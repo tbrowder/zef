@@ -4,7 +4,7 @@ unit module Zef::Utils::SystemInfo;
 our sub signal-ignore($) { Supply.new }
 our $signal-handler := &::("signal") ~~ Failure ?? &::("signal-ignore") !! &::("signal");
 our $sig-resize     := ::("Signal::SIGWINCH");
-try $signal-handler.($sig-resize).act: { $ = GET-TERM-COLUMNS() }
+try $signal-handler.($sig-resize).act: { GET-TERM-COLUMNS() }
 
 # Get terminal width
 sub GET-TERM-COLUMNS is export {

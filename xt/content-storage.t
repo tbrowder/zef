@@ -10,8 +10,8 @@ use Zef::Fetch;
 subtest {
     class Mock::ContentStorage does ContentStorage {
         method search(:$max-results = 5, *@identities, *%fields) {
-            @ = Candidate.new(:as("{@identities[0]}::X")),
-                Candidate.new(:as("{@identities[0]}::XX"));
+            Candidate.new(:as("{@identities[0]}::X")),
+            Candidate.new(:as("{@identities[0]}::XX"));
         }
     }
 

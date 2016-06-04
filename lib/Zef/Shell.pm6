@@ -14,5 +14,5 @@ class Zef::Shell {
 sub zrun(:$env, :$cwd = $*CWD, :$out, :$err, *%_, *@_) is export {
     # clean up the %env due to a bug in Proc complaining when .key ~~ Any|Nil|etc
     my %env = ($env ?? $env.hash !! %*ENV.hash).grep({ .value ~~ Str }).hash;
-    $ = Zef::Shell.new.zrun(|@_, |%_, :%env, :$cwd, :$out, :$err);
+    Zef::Shell.new.zrun(|@_, |%_, :%env, :$cwd, :$out, :$err);
 }

@@ -3,7 +3,7 @@ use Zef::Shell;
 use Zef::Service::Shell::PowerShell;
 
 class Zef::Service::Shell::PowerShell::download is Zef::Service::Shell::PowerShell does Fetcher does Messenger {
-    method fetch-matcher($url) { $ = $url.lc.starts-with('http://' | 'https://') }
+    method fetch-matcher($url) { $url.lc.starts-with('http://' | 'https://') }
     method probe { nextsame }
 
     # This seems like overkill for what is likely an edge case
@@ -16,7 +16,7 @@ class Zef::Service::Shell::PowerShell::download is Zef::Service::Shell::PowerShe
     #        my $proc = zrun('powershell', '-Command', 'Get-Command', '-Name', 'Invoke-WebRequest', :out);
     #        my @out  = $proc.out.lines;
     #        $proc.out.close;
-    #        $ = ?$proc;
+    #        ?$proc;
     #    }
     #    ?$powershell-webrequest-probe;
     #}

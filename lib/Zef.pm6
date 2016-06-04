@@ -111,19 +111,19 @@ role Pluggable {
                 if $plugin<enabled>:exists && (!$plugin<enabled> || $plugin<enabled> eq "0");
 
             next() R, DEBUG($plugin, "\t(SKIP) Plugin could not be loaded")\
-                if (try require ::($ = $module)) ~~ Nil;
+                if (try require ::($module)) ~~ Nil;
 
             DEBUG($plugin, "\t(OK) Plugin loaded successful");
 
-            if ::($ = $module).^can("probe") {
-                ::($ = $module).probe
+            if ::($module).^can("probe") {
+                ::($module).probe
                     ?? DEBUG($plugin, "\t(OK) Probing successful")
                     !! (next() R, DEBUG($plugin, "\t(SKIP) Probing failed"))
             }
 
             # add attribute `short-name` here to make filtering by name slightly easier
             # until a more elegant solution can be integrated into plugins themselves
-            my $class = ::($ = $module).new(|($plugin<options> // []))\
+            my $class = ::($module).new( |($plugin<options> // []) )\
                 but role :: { has $.short-name = $plugin<short-name> // '' };
 
             next() R, DEBUG($plugin, "(SKIP) Plugin unusable: initialization failure")\

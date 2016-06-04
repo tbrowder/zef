@@ -4,8 +4,8 @@ use Zef::Utils::URI;
 
 class Zef::Service::FetchPath does Fetcher does Messenger does Extractor {
     # .is-absolute lets the app pass around absolute paths on windows and still work as expected
-    method fetch-matcher($uri)   { $ = (?$uri.IO.is-absolute || ?$uri.lc.starts-with('.' | '/')) && $uri.IO.e }
-    method extract-matcher($uri) { $ = (?$uri.IO.is-absolute || ?$uri.lc.starts-with('.' | '/')) && $uri.IO.d }
+    method fetch-matcher($uri)   { (?$uri.IO.is-absolute || ?$uri.lc.starts-with('.' | '/')) && $uri.IO.e }
+    method extract-matcher($uri) { (?$uri.IO.is-absolute || ?$uri.lc.starts-with('.' | '/')) && $uri.IO.d }
 
     method probe { True }
 
@@ -25,6 +25,6 @@ class Zef::Service::FetchPath does Fetcher does Messenger does Extractor {
     }
 
     method list($path) {
-        $ = list-paths($path, :f, :!d, :r);
+        list-paths($path, :f, :!d, :r);
     }
 }

@@ -21,13 +21,13 @@ class Zef::Service::Shell::unzip is Zef::Shell does Extractor does Messenger {
         die "\$save-as folder does not exist and could not be created" unless (($save-as.IO.e && $save-as.IO.d) || mkdir($save-as));
         my $proc = $.zrun('unzip', '-o', '-qq', $archive-file, '-d', $save-as);
         my $extracted-to = $save-as.IO.child(self.list($archive-file).head);
-        $ = ?$proc ?? $extracted-to !! False;
+        ?$proc ?? $extracted-to !! False;
     }
 
     method list($archive-file) {
         my $proc = $.zrun('unzip', '-Z', '-1', $archive-file, :out);
         my @extracted-paths = $proc.out.lines;
         $proc.out.close;
-        @ = @extracted-paths;
+        @extracted-paths;
     }
 }

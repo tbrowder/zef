@@ -38,7 +38,7 @@ class Zef::Service::Shell::tar is Zef::Shell does Extractor does Messenger {
         $proc.out.close;
         $proc.err.close;
 
-        $ = (?$proc && $root-dir.IO.e) ?? $root-dir !! False;
+        ?$proc && $root-dir.IO.e ?? $root-dir !! False;
     }
 
     method list($archive-file) {
@@ -51,6 +51,6 @@ class Zef::Service::Shell::tar is Zef::Shell does Extractor does Messenger {
         $proc.out.close;
         $proc.err.close;
 
-        @ = ?$proc ?? @files.grep(*.defined) !! ();
+        ?$proc ?? @files.grep(*.defined) !! ();
     }
 }

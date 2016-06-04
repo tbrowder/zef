@@ -5,7 +5,7 @@ use Zef::Utils::FileSystem;
 class Zef::Service::Shell::Test is Zef::Shell does Tester does Messenger {
     method test-matcher($path) { True }
 
-    method probe { $ = True }
+    method probe { True }
 
     method test($path, :@includes) {
         die "path does not exist: {$path}" unless $path.IO.e;

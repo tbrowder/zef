@@ -461,7 +461,7 @@ package Zef::CLI {
 
     # maybe its a name, maybe its a spec/path. either way  Zef::App methods take a CURs, not strings
     sub str2cur($target) {
-        $ = CompUnit::RepositoryRegistry.repository-for-name($target)
+        CompUnit::RepositoryRegistry.repository-for-name($target)
         || CompUnit::RepositoryRegistry.repository-for-spec(~$target, :next-repo($*REPO));
     }
 

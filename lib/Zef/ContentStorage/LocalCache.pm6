@@ -38,7 +38,7 @@ class Zef::ContentStorage::LocalCache does ContentStorage {
         $path;
     }
 
-    method !slurp-manifest { $ = self!manifest-file.IO.slurp }
+    method !slurp-manifest { self!manifest-file.IO.slurp }
 
     method available {
         my $candidates := gather for self!gather-dists -> $dist {

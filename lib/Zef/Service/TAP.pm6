@@ -25,6 +25,6 @@ class Zef::Service::TAP does Tester does Messenger {
 
         # $.stdout.emit($_);
         # $.stderr.emit($_);
-        $ = $result.failed == 0;
+        so $result.failed == 0;
     }
 }

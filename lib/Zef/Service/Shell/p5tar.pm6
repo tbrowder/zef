@@ -23,13 +23,13 @@ class Zef::Service::Shell::p5tar is Zef::Shell does Extractor does Messenger {
         my @stdout = $proc.out.lines;
         $proc.out.close;
         my $extracted-to := IO::Path.new(self.list($archive-file)[0].Str, :CWD($out));
-        $ = ?$proc ?? $extracted-to.absolute !! False;
+        ?$proc ?? $extracted-to.absolute !! False;
     }
 
     method list($archive-file) {
         my $proc = $.zrun('perl', %?RESOURCES<scripts/perl5tar.pl>, '--list', $archive-file, :out);
         my @extracted-paths = |$proc.out.lines;
         $proc.out.close;
-        $ = ?$proc ?? @extracted-paths.grep(*.defined) !! False;
+        ?$proc ?? @extracted-paths.grep(*.defined) !! False;
     }
 }

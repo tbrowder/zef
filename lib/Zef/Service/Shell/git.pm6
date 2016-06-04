@@ -64,7 +64,7 @@ my role GitExtractor {
         my $proc = $.zrun('git', 'ls-files', :cwd($repo), :out);
         my @extracted-paths = $proc.out.lines;
         $proc.out.close;
-        @ = ?$proc ?? @extracted-paths.grep(*.defined) !! ();
+        ?$proc ?? @extracted-paths.grep(*.defined) !! ();
     }
 }
 

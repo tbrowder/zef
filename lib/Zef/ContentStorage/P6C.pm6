@@ -36,8 +36,8 @@ class Zef::ContentStorage::P6C does ContentStorage {
         $dir;
     }
 
-    method !package-list-file  { $ = self.IO.child('packages.json') }
-    method !slurp-package-list { @ = |from-json(self!package-list-file.slurp) }
+    method !package-list-file  { self.IO.child('packages.json') }
+    method !slurp-package-list { |from-json(self!package-list-file.slurp) }
 
     method update {
         die "Failed to update p6c" unless $!mirrors.first: -> $uri {

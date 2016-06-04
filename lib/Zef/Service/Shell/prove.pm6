@@ -44,6 +44,6 @@ class Zef::Service::Shell::prove is Zef::Shell does Tester does Messenger {
         $proc.out.close;
         $proc.err.close;
 
-        $ = ?$proc;
+        ?$proc;
     }
 }
