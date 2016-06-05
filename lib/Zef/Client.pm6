@@ -588,7 +588,7 @@ class Zef::Client {
 
     method sort-candidates(@candis, *%_) {
         my @tree;
-        my $visit = sub ($candi, $from? = '') {
+        my $visit = sub ($candi) {
             return if ($candi.dist.metainfo<marked> // 0) == 1;
             if ($candi.dist.metainfo<marked> // 0) == 0 {
                 $candi.dist.metainfo<marked> = 1;
@@ -605,10 +605,9 @@ class Zef::Client {
         };
 
         for @candis -> $candi {
-            $visit($candi, 'olaf') if ($candi.dist.metainfo<marked> // 0) == 0;
+            $visit($candi) if ($candi.dist.metainfo<marked> // 0) == 0;
         }
 
-        @tree.map(*.dist)>>.metainfo<marked>:delete;
         return @tree;
     }
 
