@@ -13,7 +13,8 @@ matrix:
         - env: BACKEND=jvm
     fast_finish: true
 
-sudo: false
+sudo: required
+dist: trusty
 
 before_install:
     - 'if [[ $BACKEND == "moar" ]]; then export VM_OPTS="--gen-moar"; fi'
